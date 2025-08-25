@@ -81,7 +81,38 @@ class MicrocontrollerTest
         Console.WriteLine($"  Expected Z: ~2mm, Actual Z: {posAfterZ.ZMm:F3}mm");
         Console.WriteLine("  ✓ Complete\n");
         
-
+        // Test 6: Initialize and Home Filter Wheel (if available)
+        try
+        {
+            Console.WriteLine("Test 6: Filter Wheel Initialize and Home");
+            controller.FilterWheelInitialize(hasEncoderW: false);
+            Console.WriteLine("  Homing filter wheel (this takes time)...");
+            await controller.FilterWheelHomingAsync();
+            Console.WriteLine($"  Current position: {controller.FilterWheelGetPosition()}");
+            Console.WriteLine("  ✓ Complete\n");
+            
+            // Test 7: Move Filter Wheel to position 3
+            Console.WriteLine("Test 7: Filter Wheel to Position 3");
+            controller.FilterWheelSetPosition(3);
+            Console.WriteLine($"  Current position: {controller.FilterWheelGetPosition()}");
+            Console.WriteLine("  ✓ Complete\n");
+            
+            // Test 8: Move Filter Wheel to next position
+            Console.WriteLine("Test 8: Filter Wheel Next Position");
+            controller.FilterWheelNextPosition();
+            Console.WriteLine($"  Current position: {controller.FilterWheelGetPosition()}");
+            Console.WriteLine("  ✓ Complete\n");
+            
+            // Test 9: Move Filter Wheel to previous position
+            Console.WriteLine("Test 9: Filter Wheel Previous Position");
+            controller.FilterWheelPreviousPosition();
+            Console.WriteLine($"  Current position: {controller.FilterWheelGetPosition()}");
+            Console.WriteLine("  ✓ Complete\n");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"  Filter wheel tests skipped: {ex.Message}\n");
+        }
         
         // Test 10: AF Laser ON/OFF
         Console.WriteLine("Test 10: AF Laser Control");
@@ -115,10 +146,8 @@ class MicrocontrollerTest
         Console.WriteLine($"  Final Position: {finalPos}");
         Console.WriteLine("  ✓ Complete\n");
         
-
-        
-        // Bonus: Start background position monitoring
-        Console.WriteLine("Bonus: Starting position monitoring for 5 seconds...");
+        // Test 14: Start background position monitoring
+        Console.WriteLine("Test 14: Starting position monitoring for 5 seconds...");
         using var cts = new CancellationTokenSource();
         
         int updateCount = 0;
